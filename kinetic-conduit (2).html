@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kinetic Conduit — Engenharia Elétrica de Precisão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0a1428;
+    --navy-800:#0f1e3d;
+    --navy-700:#172a4f;
+    --navy-600:#1f3866;
+    --gold:#e6b325;
+    --gold-bright:#f5c842;
+    --gold-soft:#f9e4a8;
+    --ink:#0a1428;
+    --paper:#fafaf7;
+    --paper-2:#f3f1ea;
+    --line:#e6e3d8;
+    --muted:#6b7280;
+    --shadow:0 30px 80px -30px rgba(10,20,40,.25);
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Manrope',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    line-height:1.55;
+  }
+  ::selection{background:var(--gold);color:var(--navy-900)}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+
+  .container{max-width:1280px;margin:0 auto;padding:0 32px}
+
+  /* ============ NAV ============ */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    padding:20px 32px;
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(250,250,247,.75);
+    backdrop-filter:blur(20px) saturate(180%);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);
+    border-bottom:1px solid transparent;
+    transition:all .4s var(--ease);
+  }
+  nav.scrolled{border-bottom-color:var(--line);padding:14px 32px}
+  .logo{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Fraunces',serif;
+    font-weight:600;font-size:20px;letter-spacing:-.02em;
+  }
+  .logo-mark{
+    width:34px;height:34px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%,var(--gold-bright),var(--gold) 60%,#a8801a);
+    position:relative;box-shadow:0 6px 20px rgba(230,179,37,.4);
+  }
+  .logo-mark::after{
+    content:'';position:absolute;inset:8px;border-radius:50%;
+    border:1.5px solid var(--navy-900);
+  }
+  .logo-mark::before{
+    content:'';position:absolute;left:50%;top:6px;bottom:6px;width:1.5px;
+    background:var(--navy-900);transform:translateX(-50%);
+  }
+  .nav-links{display:flex;gap:38px;align-items:center}
+  .nav-links a{
+    font-size:14px;font-weight:500;
+    position:relative;padding:6px 0;
+    transition:color .3s;
+  }
+  .nav-links a::after{
+    content:'';position:absolute;left:0;right:0;bottom:0;height:1px;
+    background:var(--gold);transform:scaleX(0);transform-origin:right;
+    transition:transform .4s var(--ease);
+  }
+  .nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+  .nav-links a.active{color:var(--gold)}
+  .nav-cta{
+    background:var(--navy-900);color:var(--paper);
+    padding:13px 22px;border-radius:50px;
+    font-size:13px;font-weight:600;letter-spacing:.02em;
+    display:flex;align-items:center;gap:8px;
+    transition:all .4s var(--ease);
+    border:1px solid var(--navy-900);
+  }
+  .nav-cta:hover{background:var(--gold);color:var(--navy-900);border-color:var(--gold);transform:translateY(-2px)}
+  .nav-cta svg{transition:transform .4s var(--ease)}
+  .nav-cta:hover svg{transform:translateX(3px)}
+
+  /* ============ HERO ============ */
+  .hero{
+    min-height:100vh;
+    padding:140px 32px 80px;
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 40%,#fbf6e8 0%,transparent 60%),
+      linear-gradient(180deg,#fafaf7 0%,#f3f1ea 100%);
+  }
+
+  /* Animated grid that drifts */
+  .hero-grid{
+    position:absolute;inset:-2px;
+    background-image:
+      linear-gradient(rgba(10,20,40,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(10,20,40,.05) 1px,transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse at 70% 50%,#000 20%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse at 70% 50%,#000 20%,transparent 75%);
+    animation:gridDrift 20s linear infinite;
+  }
+  @keyframes gridDrift{
+    from{background-position:0 0,0 0}
+    to{background-position:60px 60px,60px 60px}
+  }
+
+  /* Layered animated glow blobs */
+  .hero-glow{
+    position:absolute;inset:0;pointer-events:none;
+  }
+  .hero-glow::before,
+  .hero-glow::after{
+    content:'';position:absolute;border-radius:50%;
+    filter:blur(80px);
+  }
+  .hero-glow::before{
+    right:-5%;top:5%;width:55%;height:70%;
+    background:radial-gradient(circle,rgba(230,179,37,.35) 0%,transparent 60%);
+    animation:blob1 14s ease-in-out infinite;
+  }
+  .hero-glow::after{
+    left:30%;top:40%;width:45%;height:60%;
+    background:radial-gradient(circle,rgba(31,56,102,.18) 0%,transparent 60%);
+    animation:blob2 18s ease-in-out infinite;
+  }
+  @keyframes blob1{
+    0%,100%{transform:translate(0,0) scale(1)}
+    33%{transform:translate(-40px,30px) scale(1.1)}
+    66%{transform:translate(20px,-20px) scale(.95)}
+  }
+  @keyframes blob2{
+    0%,100%{transform:translate(0,0) scale(1);opacity:.7}
+    50%{transform:translate(60px,-40px) scale(1.15);opacity:1}
+  }
+
+  /* Animated SVG circuit / waves layer */
+  .hero-bg-svg{
+    position:absolute;inset:0;width:100%;height:100%;
+    pointer-events:none;
+    mask-image:radial-gradient(ellipse at 70% 50%,#000 10%,transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse at 70% 50%,#000 10%,transparent 80%);
+  }
+  .wave-path{
+    fill:none;stroke:rgba(230,179,37,.45);stroke-width:1.2;
+    stroke-dasharray:6 8;
+    animation:dash 8s linear infinite;
+  }
+  .wave-path.alt{stroke:rgba(31,56,102,.3);stroke-dasharray:3 12;animation-duration:12s;animation-direction:reverse}
+  @keyframes dash{
+    to{stroke-dashoffset:-200}
+  }
+
+  /* Floating particles */
+  .particles{
+    position:absolute;inset:0;pointer-events:none;overflow:hidden;
+  }
+  .particle{
+    position:absolute;width:4px;height:4px;border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 12px var(--gold),0 0 4px var(--gold-bright);
+    opacity:0;
+    animation:floatUp linear infinite;
+  }
+  @keyframes floatUp{
+    0%{transform:translateY(20px) translateX(0);opacity:0}
+    10%{opacity:1}
+    90%{opacity:1}
+    100%{transform:translateY(-100vh) translateX(40px);opacity:0}
+  }
+  .particle:nth-child(1){left:8%;animation-duration:14s;animation-delay:0s}
+  .particle:nth-child(2){left:18%;animation-duration:18s;animation-delay:2s;width:3px;height:3px}
+  .particle:nth-child(3){left:28%;animation-duration:16s;animation-delay:5s}
+  .particle:nth-child(4){left:42%;animation-duration:22s;animation-delay:1s;width:2px;height:2px}
+  .particle:nth-child(5){left:55%;animation-duration:15s;animation-delay:7s}
+  .particle:nth-child(6){left:68%;animation-duration:19s;animation-delay:3s;width:3px;height:3px}
+  .particle:nth-child(7){left:78%;animation-duration:17s;animation-delay:6s}
+  .particle:nth-child(8){left:88%;animation-duration:20s;animation-delay:4s;width:2px;height:2px}
+  .particle:nth-child(9){left:35%;animation-duration:13s;animation-delay:8s}
+  .particle:nth-child(10){left:62%;animation-duration:21s;animation-delay:10s}
+
+  /* Lightning bolt that occasionally flashes diagonally */
+  .bolt{
+    position:absolute;top:0;right:20%;width:2px;height:50%;
+    background:linear-gradient(180deg,transparent,var(--gold-bright),transparent);
+    transform-origin:top;transform:rotate(15deg);
+    opacity:0;
+    animation:bolt 7s ease-out infinite;
+    box-shadow:0 0 20px var(--gold);
+  }
+  .bolt.b2{right:60%;animation-delay:3.5s;height:35%}
+  @keyframes bolt{
+    0%,90%,100%{opacity:0;transform:rotate(15deg) scaleY(0)}
+    92%{opacity:.9;transform:rotate(15deg) scaleY(1)}
+    94%{opacity:0}
+    96%{opacity:.7}
+    98%{opacity:0}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .hero-grid,.hero-glow::before,.hero-glow::after,.particle,.bolt,.wave-path{animation:none}
+  }
+  .hero-inner{
+    max-width:1280px;margin:0 auto;
+    display:grid;grid-template-columns:1.1fr .9fr;gap:60px;
+    position:relative;z-index:2;align-items:center;
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:8px 16px;border:1px solid var(--navy-900);
+    border-radius:50px;font-size:11px;font-weight:600;
+    letter-spacing:.15em;text-transform:uppercase;
+    background:rgba(255,255,255,.6);
+    backdrop-filter:blur(10px);
+    opacity:0;transform:translateY(20px);
+    animation:fadeUp .9s var(--ease) .1s forwards;
+  }
+  .badge .dot{
+    width:7px;height:7px;border-radius:50%;background:var(--gold);
+    box-shadow:0 0 0 3px rgba(230,179,37,.25);
+    animation:blink 2s ease-in-out infinite;
+  }
+  @keyframes blink{50%{opacity:.4}}
+
+  h1.hero-title{
+    font-family:'Fraunces',serif;
+    font-weight:400;
+    font-size:clamp(54px,7vw,108px);
+    line-height:.92;
+    letter-spacing:-.035em;
+    margin:28px 0 24px;
+    color:var(--navy-900);
+  }
+  h1.hero-title .word{
+    display:inline-block;opacity:0;transform:translateY(40px) rotateX(40deg);
+    animation:wordIn 1.1s var(--ease) forwards;
+    transform-origin:bottom;
+  }
+  h1.hero-title .word:nth-child(1){animation-delay:.25s}
+  h1.hero-title .word:nth-child(2){animation-delay:.4s}
+  h1.hero-title .word:nth-child(3){animation-delay:.55s}
+  h1.hero-title em{
+    font-style:italic;font-weight:300;
+    color:var(--gold);
+    font-feature-settings:"ss01";
+  }
+  @keyframes wordIn{
+    to{opacity:1;transform:translateY(0) rotateX(0)}
+  }
+  @keyframes fadeUp{
+    to{opacity:1;transform:translateY(0)}
+  }
+  .hero-sub{
+    font-size:18px;color:#445166;max-width:520px;margin-bottom:42px;
+    opacity:0;transform:translateY(20px);
+    animation:fadeUp .9s var(--ease) .8s forwards;
+  }
+  .hero-ctas{
+    display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+    opacity:0;transform:translateY(20px);
+    animation:fadeUp .9s var(--ease) 1s forwards;
+  }
+  .btn-primary{
+    background:var(--gold);color:var(--navy-900);
+    padding:18px 32px;border-radius:50px;
+    font-size:14px;font-weight:700;letter-spacing:.04em;
+    text-transform:uppercase;display:flex;align-items:center;gap:12px;
+    border:none;cursor:pointer;
+    box-shadow:0 12px 30px -10px rgba(230,179,37,.6);
+    transition:all .4s var(--ease);
+    position:relative;overflow:hidden;
+  }
+  .btn-primary::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);
+    transform:translateX(-100%);
+    transition:transform .8s var(--ease);
+  }
+  .btn-primary:hover::before{transform:translateX(100%)}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 40px -10px rgba(230,179,37,.7)}
+  .btn-secondary{
+    display:flex;align-items:center;gap:12px;
+    padding:18px 24px;border-radius:50px;
+    font-size:14px;font-weight:600;
+    background:transparent;border:none;cursor:pointer;color:var(--navy-900);
+    transition:all .3s;
+  }
+  .btn-secondary .play{
+    width:42px;height:42px;border-radius:50%;
+    background:var(--navy-900);color:var(--paper);
+    display:flex;align-items:center;justify-content:center;
+    transition:all .4s var(--ease);
+  }
+  .btn-secondary:hover .play{background:var(--gold);color:var(--navy-900);transform:scale(1.1)}
+
+  /* Hero visual side */
+  .hero-visual{
+    position:relative;height:560px;
+    opacity:0;transform:translateX(40px);
+    animation:fadeUp 1.2s var(--ease) .6s forwards;
+  }
+  .hero-card{
+    position:absolute;
+    background:#fff;border-radius:24px;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(10,20,40,.06);
+    padding:24px;
+    transition:transform .6s var(--ease);
+  }
+  .card-1{
+    top:0;left:0;width:62%;
+    background:linear-gradient(135deg,var(--navy-900) 0%,var(--navy-700) 100%);
+    color:#fff;padding:32px;
+    animation:float 6s ease-in-out infinite;
+  }
+  .card-1 .label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--gold);letter-spacing:.1em;text-transform:uppercase;
+  }
+  .card-1 .num{
+    font-family:'Fraunces',serif;font-size:64px;font-weight:300;
+    line-height:1;margin:14px 0 8px;letter-spacing:-.04em;
+  }
+  .card-1 .desc{font-size:13px;opacity:.7;margin-bottom:24px}
+  .card-1 .meter{
+    height:6px;background:rgba(255,255,255,.1);border-radius:50px;overflow:hidden;
+  }
+  .card-1 .meter-fill{
+    height:100%;width:94%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));border-radius:50px;
+    box-shadow:0 0 12px var(--gold);
+    animation:meterFill 2s var(--ease) 1.4s both;
+  }
+  @keyframes meterFill{from{width:0}}
+  @keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-12px)}
+  }
+  .card-2{
+    top:60px;right:0;width:48%;
+    animation:float 7s ease-in-out infinite .5s;
+  }
+  .card-2 .icon{
+    width:48px;height:48px;border-radius:14px;
+    background:var(--paper-2);
+    display:flex;align-items:center;justify-content:center;color:var(--navy-900);
+    margin-bottom:16px;
+  }
+  .card-2 h4{font-size:17px;font-weight:700;margin-bottom:6px}
+  .card-2 p{font-size:13px;color:var(--muted)}
+
+  .card-3{
+    bottom:30px;left:80px;width:54%;
+    background:var(--navy-900);color:#fff;
+    animation:float 8s ease-in-out infinite 1s;
+  }
+  .card-3 .row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:13px}
+  .card-3 .row:not(:last-child){border-bottom:1px solid rgba(255,255,255,.08)}
+  .card-3 .row .v{color:var(--gold);font-family:'JetBrains Mono',monospace;font-weight:500}
+  .card-3 .title{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;
+  }
+
+  /* spinning gear decoration */
+  .gear-deco{
+    position:absolute;bottom:40px;right:40px;
+    width:120px;height:120px;
+    color:var(--gold);opacity:.4;
+    animation:spin 30s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ============ MARQUEE ============ */
+  .marquee{
+    background:var(--navy-900);color:var(--paper);
+    padding:24px 0;overflow:hidden;
+    border-top:1px solid rgba(255,255,255,.08);
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .marquee-track{
+    display:flex;gap:80px;
+    animation:slide 40s linear infinite;
+    width:max-content;
+  }
+  .marquee-item{
+    display:flex;align-items:center;gap:16px;
+    font-family:'Fraunces',serif;font-size:28px;font-style:italic;font-weight:300;
+    white-space:nowrap;
+  }
+  .marquee-item svg{color:var(--gold);width:20px;height:20px;flex-shrink:0}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* ============ SECTION HEADER ============ */
+  section{padding:140px 0;position:relative}
+  .section-label{
+    display:flex;align-items:center;gap:14px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:var(--gold);text-transform:uppercase;letter-spacing:.15em;
+    margin-bottom:24px;
+  }
+  .section-label .line{width:40px;height:1px;background:var(--gold)}
+  .section-title{
+    font-family:'Fraunces',serif;font-weight:400;
+    font-size:clamp(40px,5vw,68px);
+    line-height:1;letter-spacing:-.03em;
+    margin-bottom:24px;color:var(--navy-900);
+    max-width:780px;
+  }
+  .section-title em{font-style:italic;color:var(--gold);font-weight:300}
+  .section-desc{font-size:17px;color:#445166;max-width:560px}
+
+  /* ============ EXCELLENCE ============ */
+  .excellence-head{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-bottom:90px;align-items:end}
+  .stats-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:40px;
+    padding:40px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    margin-bottom:80px;
+  }
+  .stat .num{
+    font-family:'Fraunces',serif;font-size:72px;font-weight:300;
+    color:var(--navy-900);line-height:.9;letter-spacing:-.04em;
+  }
+  .stat .num span{color:var(--gold)}
+  .stat .label{font-size:13px;color:var(--muted);margin-top:8px;text-transform:uppercase;letter-spacing:.05em}
+
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+  .feature{
+    padding:40px 32px;border-radius:24px;
+    background:#fff;border:1px solid var(--line);
+    transition:all .5s var(--ease);
+    position:relative;overflow:hidden;
+  }
+  .feature::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--gold),var(--gold-bright));
+    transform:scaleX(0);transform-origin:left;
+    transition:transform .6s var(--ease);
+  }
+  .feature:hover{transform:translateY(-8px);box-shadow:var(--shadow);border-color:transparent}
+  .feature:hover::before{transform:scaleX(1)}
+  .feature-icon{
+    width:60px;height:60px;border-radius:18px;
+    background:linear-gradient(135deg,var(--navy-900),var(--navy-700));
+    color:var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:28px;
+    transition:transform .5s var(--ease);
+  }
+  .feature:hover .feature-icon{transform:rotate(-8deg) scale(1.05)}
+  .feature h3{
+    font-family:'Fraunces',serif;font-size:26px;font-weight:500;
+    margin-bottom:14px;letter-spacing:-.01em;
+  }
+  .feature p{color:var(--muted);font-size:15px}
+  .feature .arrow{
+    margin-top:24px;display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:600;color:var(--navy-900);
+    transition:gap .3s;
+  }
+  .feature:hover .arrow{gap:14px;color:var(--gold)}
+
+  /* ============ SOLUTIONS ============ */
+  .solutions{background:var(--navy-900);color:var(--paper);position:relative;overflow:hidden}
+  .solutions::before{
+    content:'';position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:80px 80px;
+    mask-image:radial-gradient(ellipse at 50% 0%,#000 20%,transparent 70%);
+  }
+  .solutions .section-title{color:var(--paper)}
+  .solutions .section-desc{color:rgba(255,255,255,.65)}
+  .solutions-head{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-bottom:80px;align-items:end;position:relative;z-index:2}
+  .solutions-grid{
+    display:grid;grid-template-columns:repeat(12,1fr);gap:24px;
+    position:relative;z-index:2;
+  }
+  .sol-card{
+    border-radius:24px;overflow:hidden;
+    position:relative;cursor:pointer;
+    transition:transform .6s var(--ease);
+    min-height:340px;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    padding:32px;
+  }
+  .sol-card:hover{transform:translateY(-10px)}
+  .sol-card .bg{
+    position:absolute;inset:0;z-index:0;
+    transition:transform .8s var(--ease);
+  }
+  .sol-card:hover .bg{transform:scale(1.08)}
+  .sol-card .overlay{
+    position:absolute;inset:0;
+    background:linear-gradient(180deg,transparent 30%,rgba(10,20,40,.85) 100%);
+    z-index:1;
+  }
+  .sol-card.featured .overlay{
+    background:linear-gradient(180deg,rgba(15,30,61,.4) 0%,rgba(15,30,61,.95) 100%);
+  }
+  .sol-card .content{position:relative;z-index:2}
+  .sol-card .num{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--gold);letter-spacing:.15em;
+    margin-bottom:14px;display:block;
+  }
+  .sol-card h3{
+    font-family:'Fraunces',serif;font-size:30px;font-weight:500;
+    color:#fff;margin-bottom:10px;letter-spacing:-.01em;line-height:1.1;
+  }
+  .sol-card p{font-size:14px;color:rgba(255,255,255,.75);max-width:320px}
+  .sol-card .icon-circle{
+    position:absolute;top:32px;right:32px;z-index:2;
+    width:48px;height:48px;border-radius:50%;
+    background:rgba(255,255,255,.1);backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.2);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;
+    transition:all .4s var(--ease);
+  }
+  .sol-card:hover .icon-circle{background:var(--gold);color:var(--navy-900);border-color:var(--gold);transform:rotate(-45deg)}
+
+  .sol-1{grid-column:span 7;background:linear-gradient(135deg,#1a3666,#0f1e3d)}
+  .sol-1 .bg{
+    background:
+      radial-gradient(circle at 70% 30%,rgba(230,179,37,.15),transparent 50%),
+      repeating-linear-gradient(45deg,transparent 0,transparent 20px,rgba(230,179,37,.04) 20px,rgba(230,179,37,.04) 21px);
+  }
+  .sol-2{grid-column:span 5;background:linear-gradient(135deg,#172a4f,#0a1428)}
+  .sol-2 .bg{
+    background:
+      radial-gradient(circle at 30% 70%,rgba(230,179,37,.12),transparent 60%);
+  }
+  .sol-3{grid-column:span 5;background:linear-gradient(135deg,#1f3866,#0f1e3d)}
+  .sol-3 .bg{
+    background:
+      conic-gradient(from 45deg at 70% 30%,transparent,rgba(230,179,37,.1),transparent);
+  }
+  .sol-4{grid-column:span 7;background:linear-gradient(135deg,#0a1428,#1a3666)}
+  .sol-4 .bg{
+    background:
+      radial-gradient(ellipse at 80% 50%,rgba(230,179,37,.18),transparent 60%);
+  }
+
+  /* ============ PROCESS ============ */
+  .process{background:var(--paper-2)}
+  .process-list{margin-top:80px}
+  .process-item{
+    display:grid;grid-template-columns:80px 1fr 1fr 60px;gap:40px;
+    padding:48px 0;border-top:1px solid rgba(10,20,40,.1);
+    align-items:center;
+    transition:all .5s var(--ease);
+    cursor:pointer;
+  }
+  .process-item:last-child{border-bottom:1px solid rgba(10,20,40,.1)}
+  .process-item:hover{padding-left:24px}
+  .process-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;color:var(--gold);font-weight:500;
+  }
+  .process-item h3{
+    font-family:'Fraunces',serif;font-size:36px;font-weight:400;
+    letter-spacing:-.02em;line-height:1;
+    transition:color .4s;
+  }
+  .process-item:hover h3{color:var(--gold)}
+  .process-item p{color:var(--muted);font-size:15px;max-width:400px}
+  .process-item .ico{
+    width:50px;height:50px;border-radius:50%;
+    border:1px solid var(--navy-900);
+    display:flex;align-items:center;justify-content:center;
+    transition:all .4s var(--ease);
+  }
+  .process-item:hover .ico{background:var(--navy-900);color:var(--gold);transform:rotate(45deg)}
+
+  /* ============ TESTIMONIAL ============ */
+  .testi{background:var(--paper);position:relative;overflow:hidden}
+  .testi-head{text-align:center;margin-bottom:60px}
+  .testi-head .section-label{justify-content:center}
+  .testi-head .section-title{margin:0 auto}
+  .testi-card{
+    max-width:880px;margin:0 auto;
+    background:#fff;border-radius:32px;
+    padding:64px 56px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+    position:relative;
+  }
+  .testi-card .quote-mark{
+    position:absolute;top:-30px;left:48px;
+    width:70px;height:70px;border-radius:50%;
+    background:var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-size:60px;color:var(--navy-900);
+    line-height:1;padding-top:20px;
+    box-shadow:0 12px 30px -10px rgba(230,179,37,.5);
+  }
+  .testi-card blockquote{
+    font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+    font-size:32px;line-height:1.35;color:var(--navy-900);
+    letter-spacing:-.01em;
+    margin:20px 0 40px;
+  }
+  .testi-author{display:flex;align-items:center;gap:16px}
+  .testi-avatar{
+    width:60px;height:60px;border-radius:50%;
+    background:linear-gradient(135deg,var(--navy-700),var(--navy-900));
+    display:flex;align-items:center;justify-content:center;
+    color:var(--gold);font-family:'Fraunces',serif;font-size:24px;
+  }
+  .testi-author .name{font-weight:700;font-size:16px;color:var(--navy-900)}
+  .testi-author .role{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+
+  .partners{
+    display:grid;grid-template-columns:repeat(5,1fr);
+    gap:40px;margin-top:80px;align-items:center;
+    padding-top:60px;border-top:1px solid var(--line);
+  }
+  .partner{
+    text-align:center;
+    font-family:'Fraunces',serif;font-size:22px;font-weight:500;
+    letter-spacing:.05em;color:var(--muted);
+    transition:color .4s;
+    opacity:.6;
+  }
+  .partner:hover{color:var(--navy-900);opacity:1}
+
+  /* ============ CTA ============ */
+  .cta{
+    background:linear-gradient(135deg,var(--navy-900) 0%,var(--navy-700) 50%,var(--navy-900) 100%);
+    color:var(--paper);position:relative;overflow:hidden;padding:140px 0;
+  }
+  .cta::before{
+    content:'';position:absolute;inset:0;
+    background-image:
+      radial-gradient(circle at 20% 30%,rgba(230,179,37,.15),transparent 50%),
+      radial-gradient(circle at 80% 70%,rgba(230,179,37,.1),transparent 50%);
+  }
+  .cta::after{
+    content:'';position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+    background-size:60px 60px;
+  }
+  .cta-inner{position:relative;z-index:2;text-align:center;max-width:880px;margin:0 auto}
+  .cta h2{
+    font-family:'Fraunces',serif;font-weight:300;
+    font-size:clamp(48px,7vw,96px);
+    line-height:.95;letter-spacing:-.035em;
+    margin-bottom:32px;
+  }
+  .cta h2 em{color:var(--gold);font-style:italic}
+  .cta p{font-size:19px;color:rgba(255,255,255,.7);margin-bottom:48px;max-width:580px;margin-left:auto;margin-right:auto}
+  .cta-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .cta-buttons .btn-secondary{color:var(--paper)}
+  .cta-buttons .btn-secondary .play{background:rgba(255,255,255,.1);color:var(--paper);border:1px solid rgba(255,255,255,.2)}
+
+  /* ============ FOOTER ============ */
+  footer{
+    background:#06101f;color:rgba(255,255,255,.7);
+    padding:100px 0 32px;position:relative;overflow:hidden;
+  }
+  footer::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
+  .footer-top{
+    display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr;gap:60px;
+    padding-bottom:64px;border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .footer-brand .logo{color:#fff;margin-bottom:24px}
+  .footer-brand p{font-size:14px;line-height:1.7;margin-bottom:28px;max-width:280px}
+  .newsletter{
+    display:flex;background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:50px;padding:6px;max-width:320px;
+    transition:border-color .3s;
+  }
+  .newsletter:focus-within{border-color:var(--gold)}
+  .newsletter input{
+    flex:1;background:transparent;border:none;outline:none;
+    padding:10px 18px;color:#fff;font-family:inherit;font-size:13px;
+  }
+  .newsletter input::placeholder{color:rgba(255,255,255,.4)}
+  .newsletter button{
+    background:var(--gold);color:var(--navy-900);
+    border:none;padding:10px 20px;border-radius:50px;
+    font-size:12px;font-weight:700;cursor:pointer;
+    text-transform:uppercase;letter-spacing:.05em;
+    transition:all .3s;
+  }
+  .newsletter button:hover{background:var(--gold-bright)}
+
+  .footer-col h4{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--gold);letter-spacing:.15em;text-transform:uppercase;
+    margin-bottom:24px;font-weight:500;
+  }
+  .footer-col ul{list-style:none}
+  .footer-col li{margin-bottom:14px}
+  .footer-col a{
+    font-size:14px;
+    transition:all .3s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .footer-col a:hover{color:var(--gold);transform:translateX(4px)}
+
+  .footer-contact .contact-item{
+    display:flex;gap:14px;margin-bottom:22px;
+    align-items:flex-start;
+  }
+  .footer-contact .ico-sm{
+    width:36px;height:36px;border-radius:10px;
+    background:rgba(230,179,37,.1);
+    color:var(--gold);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    border:1px solid rgba(230,179,37,.2);
+  }
+  .footer-contact .ci-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:4px}
+  .footer-contact .ci-val{font-size:14px;color:#fff;line-height:1.4}
+
+  .socials{display:flex;gap:10px;margin-top:24px}
+  .socials a{
+    width:40px;height:40px;border-radius:50%;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+    display:flex;align-items:center;justify-content:center;
+    transition:all .4s var(--ease);
+  }
+  .socials a:hover{background:var(--gold);color:var(--navy-900);border-color:var(--gold);transform:translateY(-3px)}
+
+  .footer-bottom{
+    padding-top:32px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+    font-size:13px;color:rgba(255,255,255,.45);
+  }
+  .footer-bottom .legal{display:flex;gap:32px}
+  .footer-bottom .legal a:hover{color:var(--gold)}
+
+  .giant-text{
+    font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+    font-size:clamp(120px,20vw,280px);
+    line-height:.8;letter-spacing:-.05em;
+    text-align:center;
+    color:transparent;
+    -webkit-text-stroke:1px rgba(255,255,255,.06);
+    margin:60px 0 -40px;
+    user-select:none;pointer-events:none;
+  }
+
+  /* ============ SCROLL REVEAL ============ */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+  .reveal-stagger > *{opacity:0;transform:translateY(40px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+  .reveal-stagger.visible > *:nth-child(1){transition-delay:0s;opacity:1;transform:translateY(0)}
+  .reveal-stagger.visible > *:nth-child(2){transition-delay:.1s;opacity:1;transform:translateY(0)}
+  .reveal-stagger.visible > *:nth-child(3){transition-delay:.2s;opacity:1;transform:translateY(0)}
+  .reveal-stagger.visible > *:nth-child(4){transition-delay:.3s;opacity:1;transform:translateY(0)}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:960px){
+    .nav-links{display:none}
+    .hero-inner{grid-template-columns:1fr;gap:40px}
+    .hero-visual{height:480px}
+    .excellence-head,.solutions-head{grid-template-columns:1fr;gap:30px}
+    .stats-row{grid-template-columns:repeat(2,1fr);gap:30px}
+    .features-grid{grid-template-columns:1fr}
+    .solutions-grid{display:flex;flex-direction:column}
+    .sol-card{grid-column:auto}
+    .process-item{grid-template-columns:1fr;gap:14px}
+    .footer-top{grid-template-columns:1fr 1fr;gap:40px}
+    .partners{grid-template-columns:repeat(2,1fr);gap:24px}
+    .testi-card{padding:48px 28px}
+    .testi-card blockquote{font-size:24px}
+    section{padding:90px 0}
+    .container{padding:0 22px}
+  }
+  @media (max-width:640px){
+    .footer-top{grid-template-columns:1fr}
+    .footer-bottom{flex-direction:column;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <span class="logo-mark"></span>
+    KINETIC CONDUIT
+  </a>
+  <div class="nav-links">
+    <a href="#home" class="active">Início</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#solucoes">Soluções</a>
+    <a href="#processo">Processo</a>
+    <a href="#contato">Contato</a>
+  </div>
+  <a href="#contato" class="nav-cta">
+    Solicitar Orçamento
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <svg class="hero-bg-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+    <path class="wave-path" d="M0,450 Q360,300 720,450 T1440,450"/>
+    <path class="wave-path alt" d="M0,520 Q360,400 720,520 T1440,520"/>
+    <path class="wave-path" d="M0,380 Q360,260 720,380 T1440,380"/>
+    <path class="wave-path alt" d="M0,600 Q360,500 720,600 T1440,600"/>
+  </svg>
+  <div class="particles">
+    <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+    <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+    <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+    <span class="particle"></span>
+  </div>
+  <div class="bolt"></div>
+  <div class="bolt b2"></div>
+  <div class="hero-inner">
+    <div>
+      <span class="badge"><span class="dot"></span> ESTABELECIDA EM 1994 · 30 ANOS DE PRECISÃO</span>
+      <h1 class="hero-title">
+        <span class="word">Energia</span><br>
+        <span class="word">que <em>move</em></span><br>
+        <span class="word">o futuro.</span>
+      </h1>
+      <p class="hero-sub">
+        Engenharia elétrica de alta precisão, eletrodutos industriais e infraestrutura crítica para a próxima geração da indústria global.
+      </p>
+      <div class="hero-ctas">
+        <button class="btn-primary">
+          Iniciar Seu Projeto
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-secondary">
+          <span class="play">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+          Assistir Demonstração
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card card-1">
+        <span class="label">↳ DESEMPENHO MÉDIO</span>
+        <div class="num">99,7%</div>
+        <p class="desc">Uptime garantido em todas as instalações ativas</p>
+        <div class="meter"><div class="meter-fill"></div></div>
+      </div>
+
+      <div class="hero-card card-2">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h4>Smart Grid</h4>
+        <p>Monitoramento em tempo real com IoT integrado.</p>
+      </div>
+
+      <div class="hero-card card-3">
+        <div class="title">↳ MÉTRICAS DO DIA</div>
+        <div class="row"><span>Tensão</span><span class="v">220 V</span></div>
+        <div class="row"><span>Carga</span><span class="v">87.4 %</span></div>
+        <div class="row"><span>Eficiência</span><span class="v">94.2 %</span></div>
+        <div class="row"><span>Status</span><span class="v">● ATIVO</span></div>
+      </div>
+
+      <svg class="gear-deco" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+        <circle cx="50" cy="50" r="20"/>
+        <circle cx="50" cy="50" r="35"/>
+        <g><path d="M50 5 L52 15 L48 15 Z M50 95 L52 85 L48 85 Z M5 50 L15 52 L15 48 Z M95 50 L85 52 L85 48 Z M18 18 L26 24 L24 26 Z M82 82 L74 76 L76 74 Z M82 18 L74 24 L76 26 Z M18 82 L26 76 L24 74 Z"/></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <div class="marquee-item">Engenharia de Precisão <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Infraestrutura Industrial <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Sistemas de Alta Tensão <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Energia Renovável <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Smart Grid <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Manutenção 24/7 <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <!-- duplicate -->
+    <div class="marquee-item">Engenharia de Precisão <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Infraestrutura Industrial <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Sistemas de Alta Tensão <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Energia Renovável <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Smart Grid <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+    <div class="marquee-item">Manutenção 24/7 <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></div>
+  </div>
+</div>
+
+<!-- ============ EXCELLENCE / SERVIÇOS ============ -->
+<section id="servicos">
+  <div class="container">
+    <div class="excellence-head reveal">
+      <div>
+        <div class="section-label"><span class="line"></span> NOSSA EXCELÊNCIA</div>
+        <h2 class="section-title">Precisão em <em>cada</em> circuito.</h2>
+      </div>
+      <p class="section-desc">
+        Não entregamos apenas energia. Conduzimos confiabilidade através de tecnologia, expertise e três décadas de obsessão pelo detalhe.
+      </p>
+    </div>
+
+    <div class="stats-row reveal-stagger">
+      <div class="stat"><div class="num">30<span>+</span></div><div class="label">Anos no mercado</div></div>
+      <div class="stat"><div class="num">2.4k<span>+</span></div><div class="label">Projetos entregues</div></div>
+      <div class="stat"><div class="num">99<span>%</span></div><div class="label">Taxa de aprovação</div></div>
+      <div class="stat"><div class="num">47<span></span></div><div class="label">Países atendidos</div></div>
+    </div>
+
+    <div class="features-grid reveal-stagger">
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+        </div>
+        <h3>Qualidade Inigualável</h3>
+        <p>Cada componente passa por testes rigorosos que superam padrões da indústria, garantindo desempenho impecável em condições extremas.</p>
+        <a href="#" class="arrow">Saiba mais →</a>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L3 7v6c0 5 4 9 9 10 5-1 9-5 9-10V7l-9-5z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h3>Protocolo de Segurança</h3>
+        <p>Metodologia "Safety First" integra eletrodutos à prova de falhas e regulação térmica desde a concepção do projeto.</p>
+        <a href="#" class="arrow">Saiba mais →</a>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.2 4.2l4.3 4.3M15.5 15.5l4.3 4.3M1 12h6M17 12h6M4.2 19.8l4.3-4.3M15.5 8.5l4.3-4.3"/></svg>
+        </div>
+        <h3>Tecnologia Next-Gen</h3>
+        <p>Smart grid integrado e monitoramento IoT entregam diagnóstico em tempo real de toda a sua infraestrutura elétrica.</p>
+        <a href="#" class="arrow">Saiba mais →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOLUTIONS ============ -->
+<section class="solutions" id="solucoes">
+  <div class="container">
+    <div class="solutions-head reveal">
+      <div>
+        <div class="section-label"><span class="line"></span> CAPACIDADES</div>
+        <h2 class="section-title">Soluções de <em>engenharia</em>.</h2>
+      </div>
+      <p class="section-desc">
+        Da rede industrial pesada aos eletrodutos de alta velocidade para data centers, projetamos cada solução para entregar performance máxima.
+      </p>
+    </div>
+
+    <div class="solutions-grid reveal-stagger">
+      <div class="sol-card sol-1 featured">
+        <div class="bg"></div>
+        <div class="overlay"></div>
+        <div class="icon-circle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </div>
+        <div class="content">
+          <span class="num">01 / SISTEMAS</span>
+          <h3>Sistemas de<br>Energia Industrial</h3>
+          <p>Distribuição pesada para fabricação e instalações petroquímicas de grande escala.</p>
+        </div>
+      </div>
+
+      <div class="sol-card sol-2">
+        <div class="bg"></div>
+        <div class="overlay"></div>
+        <div class="icon-circle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </div>
+        <div class="content">
+          <span class="num">02 / DESIGN</span>
+          <h3>Infraestrutura<br>Inteligente</h3>
+          <p>Arquitetura elétrica customizada para o desenvolvimento urbano moderno.</p>
+        </div>
+      </div>
+
+      <div class="sol-card sol-3">
+        <div class="bg"></div>
+        <div class="overlay"></div>
+        <div class="icon-circle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </div>
+        <div class="content">
+          <span class="num">03 / VERDE</span>
+          <h3>Integração<br>Renovável</h3>
+          <p>Conectamos ativos solares e eólicos à malha primária com perda mínima.</p>
+        </div>
+      </div>
+
+      <div class="sol-card sol-4 featured">
+        <div class="bg"></div>
+        <div class="overlay"></div>
+        <div class="icon-circle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </div>
+        <div class="content">
+          <span class="num">04 / SUPORTE</span>
+          <h3>Manutenção 24/7</h3>
+          <p>Suporte técnico emergencial e diagnóstico preditivo para operação contínua.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="process" id="processo">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label"><span class="line"></span> COMO TRABALHAMOS</div>
+      <h2 class="section-title">Um processo <em>refinado</em> em três décadas.</h2>
+    </div>
+
+    <div class="process-list">
+      <div class="process-item reveal">
+        <div class="process-num">01</div>
+        <h3>Diagnóstico</h3>
+        <p>Mapeamento completo da sua infraestrutura atual e necessidades futuras.</p>
+        <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      </div>
+      <div class="process-item reveal">
+        <div class="process-num">02</div>
+        <h3>Engenharia</h3>
+        <p>Projeto detalhado por engenheiros sêniores com simulação 3D e análise térmica.</p>
+        <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      </div>
+      <div class="process-item reveal">
+        <div class="process-num">03</div>
+        <h3>Implementação</h3>
+        <p>Equipes certificadas executam com cronograma rigoroso e zero retrabalho.</p>
+        <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      </div>
+      <div class="process-item reveal">
+        <div class="process-num">04</div>
+        <h3>Monitoramento</h3>
+        <p>Acompanhamento contínuo via plataforma IoT proprietária com SLA garantido.</p>
+        <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIAL ============ -->
+<section class="testi">
+  <div class="container">
+    <div class="testi-head reveal">
+      <div class="section-label"><span class="line"></span> PARCERIAS DE CONFIANÇA</div>
+      <h2 class="section-title">Liderando a <em>indústria</em>.</h2>
+    </div>
+
+    <div class="testi-card reveal">
+      <div class="quote-mark">"</div>
+      <blockquote>
+        A precisão técnica que a Kinetic Conduit trouxe para nossa instalação offshore foi muito além de qualquer comparação. Seus sistemas operaram impecavelmente durante três grandes ciclos de tempestades.
+      </blockquote>
+      <div class="testi-author">
+        <div class="testi-avatar">MV</div>
+        <div>
+          <div class="name">Marcus Vance</div>
+          <div class="role">Diretor de Operações · Atlas Energy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="partners reveal">
+      <div class="partner">VOLT-TECH</div>
+      <div class="partner">GEOSYNC</div>
+      <div class="partner">HYDRO-X</div>
+      <div class="partner">MEGA-GRID</div>
+      <div class="partner">ORBITAL</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta" id="contato">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <h2>Pronto para conduzir <em>excelência?</em></h2>
+      <p>Deixe nossa equipe de engenheiros elétricos sêniores projetar a próxima geração da sua infraestrutura crítica.</p>
+      <div class="cta-buttons">
+        <button class="btn-primary">
+          Falar com Engenheiros
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-secondary">
+          <span class="play">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 5h18M3 12h18M3 19h18"/></svg>
+          </span>
+          Baixar Catálogo
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="giant-text">Kinetic.</div>
+
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <span class="logo-mark"></span>
+          KINETIC CONDUIT
+        </a>
+        <p>Liderando a evolução da engenharia elétrica através de padrões técnicos de precisão e inovação contínua desde 1994.</p>
+        <form class="newsletter" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓ INSCRITO'">
+          <input type="email" placeholder="Seu melhor e-mail" required>
+          <button type="submit">ASSINAR</button>
+        </form>
+        <div class="socials">
+          <a href="#" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          <a href="#" aria-label="X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#">Início</a></li>
+          <li><a href="#">Sobre Nós</a></li>
+          <li><a href="#">Serviços</a></li>
+          <li><a href="#">Soluções</a></li>
+          <li><a href="#">Cases</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Serviços</h4>
+        <ul>
+          <li><a href="#">Sistemas Industriais</a></li>
+          <li><a href="#">Especificações Técnicas</a></li>
+          <li><a href="#">Engenharia Portuária</a></li>
+          <li><a href="#">Relatório de Sustentabilidade</a></li>
+          <li><a href="#">Smart Grid</a></li>
+          <li><a href="#">Manutenção 24/7</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Recursos</h4>
+        <ul>
+          <li><a href="#">Central de Ajuda</a></li>
+          <li><a href="#">Documentação</a></li>
+          <li><a href="#">Certificações</a></li>
+          <li><a href="#">Carreiras</a></li>
+          <li><a href="#">Imprensa</a></li>
+          <li><a href="#">Investidores</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-contact">
+        <h4>Sede Global</h4>
+        <div class="contact-item">
+          <div class="ico-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="ci-label">Endereço</div>
+            <div class="ci-val">Av. Innovation, 2409<br>Setor Industrial, SP 04567</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="ico-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          </div>
+          <div>
+            <div class="ci-label">E-mail</div>
+            <div class="ci-val">contato@kineticconduit.com</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="ico-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="ci-label">Telefone</div>
+            <div class="ci-val">+55 (11) 3669-5463</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 Kinetic Conduit Engineering. Precisão em movimento.</div>
+      <div class="legal">
+        <a href="#">Política de Privacidade</a>
+        <a href="#">Termos de Serviço</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+
+  // Animated number counters
+  const animateNum = (el) => {
+    const txt = el.textContent;
+    const match = txt.match(/(\d+\.?\d*)/);
+    if (!match) return;
+    const target = parseFloat(match[1]);
+    const suffix = txt.slice(match[0].length);
+    let current = 0;
+    const step = target / 50;
+    const tick = () => {
+      current += step;
+      if (current < target) {
+        el.firstChild.textContent = (target < 10 ? current.toFixed(1) : Math.floor(current)) + (txt.includes('k') ? 'k' : '');
+        requestAnimationFrame(tick);
+      } else {
+        el.firstChild.textContent = match[0];
+      }
+    };
+    tick();
+  };
+
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.stat .num').forEach(animateNum);
+        statObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stats-row').forEach(el => statObserver.observe(el));
+
+  // Magnetic hero cards (subtle parallax on mouse)
+  const heroVisual = document.querySelector('.hero-visual');
+  if (heroVisual) {
+    heroVisual.addEventListener('mousemove', (e) => {
+      const rect = heroVisual.getBoundingClientRect();
+      const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
+      const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
+      heroVisual.querySelectorAll('.hero-card').forEach((card, i) => {
+        const intensity = (i + 1) * 8;
+        card.style.transform = `translate(${x * intensity}px, ${y * intensity}px)`;
+      });
+    });
+    heroVisual.addEventListener('mouseleave', () => {
+      heroVisual.querySelectorAll('.hero-card').forEach(card => {
+        card.style.transform = '';
+      });
+    });
+  }
+</script>
+</body>
+</html>
